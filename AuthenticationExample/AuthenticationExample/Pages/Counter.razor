@@ -1,0 +1,53 @@
+﻿@page "/counter"
+@attribute [Authorize(Roles ="dev")]
+@inject IAuthorizationService AuthorizationService
+
+<AuthorizeView>
+    <Authorized>
+        <p> Você está autenticado, @context.User.Identity.Name </p>
+        @*<p> Você está autenticado, @context.User.Identity.rol </p>*@
+    </Authorized>
+    <NotAuthorized>
+        <p> Infelizmente você não tem acesso</p>
+    </NotAuthorized>
+    <Authorizing>
+        <p> Autenticando</p>
+    </Authorizing>
+</AuthorizeView>
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+
+    //[CascadingParameter] Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    //async Task DoSomething()
+    //{
+    //    var user = (await authenticationStateTask).User;
+
+    //    if (user.Identity.IsAuthenticated)
+    //    {
+    //        // Perform some action only available to authenticated (logged-in) users
+    //    }
+
+    //    if (user.IsInRole("admin"))
+    //    {
+    //        // Perform some action only available to users in the 'admin' role
+    //    }
+
+    //    if ((await AuthorizationService.AuthorizeAsync(user, "content-editor")).Succeeded)
+    //    {
+    //        // Perform some action only available to users satifying the 'content-editor' policy
+    //    }
+    //}
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
