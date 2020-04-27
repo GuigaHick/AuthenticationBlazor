@@ -1,17 +1,19 @@
 ﻿@page "/loginControl"
-
-@*@inject ICryptographyProvider CryptographyProvider*@
+@using AuthenticationExample.Authentication
 @inject NavigationManager NavigationManager
+@inject ILoginService LoginService
 
 <AuthorizeView>
     <Authorized>
         <b>Hello, @context.User.Identity.Name!</b>
         <a class="ml-md-auto btn btn-primary" href="logout" target="_top">Log out</a>
+        <button @onclick="LogOut"> Log Out</button>
     </Authorized>
     <NotAuthorized>
         <input type="text" placeholder="Email or Login" @bind="@Username" />
         <input type="password" placeholder="Password" @bind="@Password" />
-        <a class="ml-md-auto btn btn-primary" href="@(MontarUrlLogin())" target="_top">Log in</a>
+        <input type="text" placeholder="Role" @bind="@Role" />
+        <button @onclick="LoginAction">Log in</button>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -20,23 +22,20 @@
     string Username = "";
     string Password = "";
     string url = "";
+    string Role = "";
 
     protected override void OnInitialized()
     {
         url = NavigationManager.Uri.ToString();
     }
 
-    private string MontarUrlLogin()
+    private async Task LoginAction()
     {
-        if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
-        {
-            return "";
-        }
+        await LoginService.Login(new UserInfo() { Name = Username, Password = Password, Role = Role });
+    }
 
-        return string.Format(
-            "login?emailOrLogin={0}&password={1}&returnUrl={2}",
-            Username,
-            Password,
-            url);
+    private async Task LogOut()
+    {
+        await LoginService.LogOut();
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AuthenticationExample.Data;
 using Microsoft.AspNetCore.Components.Authorization;
+using AuthenticationExample.Authentication;
 
 namespace AuthenticationExample
 {
@@ -37,7 +38,12 @@ namespace AuthenticationExample
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddAuthenticationCore();
-            services.AddScoped<AuthenticationStateProvider, FakeAuthenticationStateProvider>();
+            //services.AddScoped<AuthenticationStateProvider, FakeAuthenticationStateProvider>();
+            services.AddScoped<FakeAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider, FakeAuthenticationStateProvider>(
+                provider => provider.GetRequiredService<FakeAuthenticationStateProvider>());
+            services.AddScoped<ILoginService, FakeAuthenticationStateProvider>(
+                provider => provider.GetRequiredService<FakeAuthenticationStateProvider>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
